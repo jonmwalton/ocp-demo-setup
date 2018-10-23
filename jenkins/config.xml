@@ -1,0 +1,319 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<hudson>
+  <disabledAdministrativeMonitors/>
+  <version>2.121.3</version>
+  <installStateName>RESTART</installStateName>
+  <numExecutors>5</numExecutors>
+  <mode>NORMAL</mode>
+  <useSecurity>true</useSecurity>
+  <authorizationStrategy class="hudson.security.GlobalMatrixAuthorizationStrategy">
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Create:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Create:jonwalton-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Delete:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Delete:jonwalton-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains:jonwalton-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Update:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Update:jonwalton-admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.UseItem:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.UseOwn:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.View:admin</permission>
+    <permission>com.cloudbees.plugins.credentials.CredentialsProvider.View:jonwalton-admin</permission>
+    <permission>hudson.model.Computer.Build:admin</permission>
+    <permission>hudson.model.Computer.Configure:admin</permission>
+    <permission>hudson.model.Computer.Configure:jonwalton-admin</permission>
+    <permission>hudson.model.Computer.Connect:admin</permission>
+    <permission>hudson.model.Computer.Create:admin</permission>
+    <permission>hudson.model.Computer.Delete:admin</permission>
+    <permission>hudson.model.Computer.Delete:jonwalton-admin</permission>
+    <permission>hudson.model.Computer.Disconnect:admin</permission>
+    <permission>hudson.model.Computer.ExtendedRead:admin</permission>
+    <permission>hudson.model.Hudson.Administer:admin</permission>
+    <permission>hudson.model.Hudson.Administer:jonwalton-admin</permission>
+    <permission>hudson.model.Hudson.ConfigureUpdateCenter:admin</permission>
+    <permission>hudson.model.Hudson.Read:admin</permission>
+    <permission>hudson.model.Hudson.Read:jonwalton-admin</permission>
+    <permission>hudson.model.Hudson.RunScripts:admin</permission>
+    <permission>hudson.model.Hudson.RunScripts:jonwalton-admin</permission>
+    <permission>hudson.model.Hudson.UploadPlugins:admin</permission>
+    <permission>hudson.model.Item.Build:admin</permission>
+    <permission>hudson.model.Item.Build:jonwalton-admin</permission>
+    <permission>hudson.model.Item.Cancel:admin</permission>
+    <permission>hudson.model.Item.Configure:admin</permission>
+    <permission>hudson.model.Item.Configure:jonwalton-admin</permission>
+    <permission>hudson.model.Item.Create:admin</permission>
+    <permission>hudson.model.Item.Create:jonwalton-admin</permission>
+    <permission>hudson.model.Item.Delete:admin</permission>
+    <permission>hudson.model.Item.Delete:jonwalton-admin</permission>
+    <permission>hudson.model.Item.Discover:admin</permission>
+    <permission>hudson.model.Item.Discover:jonwalton-admin</permission>
+    <permission>hudson.model.Item.ExtendedRead:admin</permission>
+    <permission>hudson.model.Item.Move:admin</permission>
+    <permission>hudson.model.Item.Read:admin</permission>
+    <permission>hudson.model.Item.Read:jonwalton-admin</permission>
+    <permission>hudson.model.Item.Workspace:admin</permission>
+    <permission>hudson.model.Item.Workspace:jonwalton-admin</permission>
+    <permission>hudson.model.Run.Delete:admin</permission>
+    <permission>hudson.model.Run.Delete:jonwalton-admin</permission>
+    <permission>hudson.model.Run.Replay:admin</permission>
+    <permission>hudson.model.Run.Update:admin</permission>
+    <permission>hudson.model.Run.Update:jonwalton-admin</permission>
+    <permission>hudson.model.View.Configure:admin</permission>
+    <permission>hudson.model.View.Configure:jonwalton-admin</permission>
+    <permission>hudson.model.View.Create:admin</permission>
+    <permission>hudson.model.View.Create:jonwalton-admin</permission>
+    <permission>hudson.model.View.Delete:admin</permission>
+    <permission>hudson.model.View.Delete:jonwalton-admin</permission>
+    <permission>hudson.model.View.Read:admin</permission>
+    <permission>hudson.scm.SCM.Tag:admin</permission>
+    <permission>hudson.scm.SCM.Tag:jonwalton-admin</permission>
+    <permission>hudson.security.Permission.FullControl:admin</permission>
+    <permission>hudson.security.Permission.GenericConfigure:admin</permission>
+    <permission>hudson.security.Permission.GenericCreate:admin</permission>
+    <permission>hudson.security.Permission.GenericDelete:admin</permission>
+    <permission>hudson.security.Permission.GenericRead:admin</permission>
+    <permission>hudson.security.Permission.GenericUpdate:admin</permission>
+    <permission>hudson.security.Permission.GenericWrite:admin</permission>
+  </authorizationStrategy>
+  <securityRealm class="org.openshift.jenkins.plugins.openshiftlogin.OpenShiftOAuth2SecurityRealm" plugin="openshift-login@1.0.9">
+    <defaultedServiceAccountDirectory>/run/secrets/kubernetes.io/serviceaccount</defaultedServiceAccountDirectory>
+    <defaultedServiceAccountName>jenkins</defaultedServiceAccountName>
+    <defaultedServerPrefix>https://openshift.default.svc</defaultedServerPrefix>
+    <defaultedRedirectURL>https://console.192.168.122.78.nip.io:8443</defaultedRedirectURL>
+    <defaultedClientId>system:serviceaccount:jenkins:jenkins</defaultedClientId>
+    <defaultedClientSecret>eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJqZW5raW5zIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImplbmtpbnMtdG9rZW4tcXY3cXMiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiamVua2lucyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFhOTczYTc3LWNiMDYtMTFlOC05NThkLTUyNTQwMDJlNTUzMiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpqZW5raW5zOmplbmtpbnMifQ.XLOE96Qjd-50wpA9MwOndQVx4lCXr0PAhB0VgKmJEcNxj_dUXmUwl0SgIFzpE79nEd8SENGLtA0UQzJyVFFTi4tQ9a4kNFz4XVKBXJwHtyAnYrQDxxj9xi07lYXs1RphMhfTZ9nSxMLdzqv-i5QLfmU93OFlwLH-8xtqKW3oNR7-8AKtCq0XuUqCdEE0GxdyO3bXMwTVJMc8Ra7TwNscJs2kCA8s_p0m72GAsWx7KqYQE6ZcesOj08hHoREnPM0YFSUNMB-WBcqVr36PxmcqIsgLE2s5HcShvs44FSf9RTPqY8bk-CcdKWogqGkeM3GSpY0poXMIhddPNl0lbxqW3g</defaultedClientSecret>
+    <namespace>jenkins</namespace>
+    <provider>
+      <issuer>https://console.192.168.122.78.nip.io:8443</issuer>
+      <authorization__endpoint>https://console.192.168.122.78.nip.io:8443/oauth/authorize</authorization__endpoint>
+      <token__endpoint>https://console.192.168.122.78.nip.io:8443/oauth/token</token__endpoint>
+    </provider>
+    <filter/>
+  </securityRealm>
+  <disableRememberMe>false</disableRememberMe>
+  <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
+  <workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+  <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>
+  <markupFormatter class="hudson.markup.EscapedMarkupFormatter"/>
+  <jdks/>
+  <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
+  <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
+  <clouds>
+    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.12.1">
+      <name>openshift</name>
+      <defaultsProviderTemplate></defaultsProviderTemplate>
+      <templates>
+      <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+          <inheritFrom></inheritFrom>
+          <name>maven</name>
+          <namespace></namespace>
+          <privileged>false</privileged>
+          <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
+          <alwaysPullImage>false</alwaysPullImage>
+          <instanceCap>2147483647</instanceCap>
+          <slaveConnectTimeout>100</slaveConnectTimeout>
+          <idleMinutes>0</idleMinutes>
+          <activeDeadlineSeconds>0</activeDeadlineSeconds>
+          <label>maven</label>
+          <serviceAccount>jenkins</serviceAccount>
+          <nodeSelector></nodeSelector>
+          <nodeUsageMode>NORMAL</nodeUsageMode>
+          <customWorkspaceVolumeEnabled>false</customWorkspaceVolumeEnabled>
+          <workspaceVolume class="org.csanchez.jenkins.plugins.kubernetes.volumes.workspace.EmptyDirWorkspaceVolume">
+            <memory>false</memory>
+          </workspaceVolume>
+          <volumes/>
+          <containers>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+              <name>jnlp</name>
+              <image>docker.io/openshift/jenkins-agent-maven-35-centos7:v3.11</image>
+              <privileged>false</privileged>
+              <alwaysPullImage>true</alwaysPullImage>
+              <workingDir>/tmp</workingDir>
+              <command></command>
+              <args>${computer.jnlpmac} ${computer.name}</args>
+              <ttyEnabled>false</ttyEnabled>
+              <resourceRequestCpu></resourceRequestCpu>
+              <resourceRequestMemory></resourceRequestMemory>
+              <resourceLimitCpu></resourceLimitCpu>
+              <resourceLimitMemory></resourceLimitMemory>
+              <envVars/>
+              <ports/>
+              <livenessProbe>
+                <execArgs></execArgs>
+                <timeoutSeconds>0</timeoutSeconds>
+                <initialDelaySeconds>0</initialDelaySeconds>
+                <failureThreshold>0</failureThreshold>
+                <periodSeconds>0</periodSeconds>
+                <successThreshold>0</successThreshold>
+              </livenessProbe>
+            </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          </containers>
+          <envVars/>
+          <annotations/>
+          <imagePullSecrets/>
+        </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+        <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+          <inheritFrom></inheritFrom>
+          <name>nodejs</name>
+          <namespace></namespace>
+          <privileged>false</privileged>
+          <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
+          <alwaysPullImage>false</alwaysPullImage>
+          <instanceCap>2147483647</instanceCap>
+          <slaveConnectTimeout>100</slaveConnectTimeout>
+          <idleMinutes>0</idleMinutes>
+          <activeDeadlineSeconds>0</activeDeadlineSeconds>
+          <label>nodejs</label>
+          <serviceAccount>jenkins</serviceAccount>
+          <nodeSelector></nodeSelector>
+          <nodeUsageMode>NORMAL</nodeUsageMode>
+          <customWorkspaceVolumeEnabled>false</customWorkspaceVolumeEnabled>
+          <workspaceVolume class="org.csanchez.jenkins.plugins.kubernetes.volumes.workspace.EmptyDirWorkspaceVolume">
+            <memory>false</memory>
+          </workspaceVolume>
+          <volumes/>
+          <containers>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+              <name>jnlp</name>
+              <image>docker.io/openshift/jenkins-agent-nodejs-8-centos7:v3.11</image>
+              <privileged>false</privileged>
+              <alwaysPullImage>true</alwaysPullImage>
+              <workingDir>/tmp</workingDir>
+              <command></command>
+              <args>${computer.jnlpmac} ${computer.name}</args>
+              <ttyEnabled>false</ttyEnabled>
+              <resourceRequestCpu></resourceRequestCpu>
+              <resourceRequestMemory></resourceRequestMemory>
+              <resourceLimitCpu></resourceLimitCpu>
+              <resourceLimitMemory></resourceLimitMemory>
+              <envVars/>
+              <ports/>
+              <livenessProbe>
+                <execArgs></execArgs>
+                <timeoutSeconds>0</timeoutSeconds>
+                <initialDelaySeconds>0</initialDelaySeconds>
+                <failureThreshold>0</failureThreshold>
+                <periodSeconds>0</periodSeconds>
+                <successThreshold>0</successThreshold>
+              </livenessProbe>
+            </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          </containers>
+          <envVars/>
+          <annotations/>
+          <imagePullSecrets/>
+        </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+        <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+          <inheritFrom></inheritFrom>
+          <name>maven-appdev</name>
+          <namespace></namespace>
+          <privileged>false</privileged>
+          <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
+          <alwaysPullImage>false</alwaysPullImage>
+          <instanceCap>2147483647</instanceCap>
+          <slaveConnectTimeout>100</slaveConnectTimeout>
+          <idleMinutes>0</idleMinutes>
+          <activeDeadlineSeconds>0</activeDeadlineSeconds>
+          <label>maven-appdev</label>
+          <serviceAccount>jenkins</serviceAccount>
+          <nodeSelector></nodeSelector>
+          <nodeUsageMode>NORMAL</nodeUsageMode>
+          <customWorkspaceVolumeEnabled>false</customWorkspaceVolumeEnabled>
+          <workspaceVolume class="org.csanchez.jenkins.plugins.kubernetes.volumes.workspace.EmptyDirWorkspaceVolume">
+            <memory>false</memory>
+          </workspaceVolume>
+          <volumes/>
+          <containers>
+            <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+              <name>jnlp</name>
+              <image>docker-registry.default.svc:5000/jenkins/jenkins-slave-maven-appdev:v3.9</image>
+              <privileged>false</privileged>
+              <alwaysPullImage>false</alwaysPullImage>
+              <workingDir>/tmp</workingDir>
+              <command></command>
+              <args>${computer.jnlpmac} ${computer.name}</args>
+              <ttyEnabled>false</ttyEnabled>
+              <resourceRequestCpu></resourceRequestCpu>
+              <resourceRequestMemory></resourceRequestMemory>
+              <resourceLimitCpu></resourceLimitCpu>
+              <resourceLimitMemory>2Gi</resourceLimitMemory>
+              <envVars/>
+              <ports/>
+              <livenessProbe>
+                <execArgs></execArgs>
+                <timeoutSeconds>0</timeoutSeconds>
+                <initialDelaySeconds>0</initialDelaySeconds>
+                <failureThreshold>0</failureThreshold>
+                <periodSeconds>0</periodSeconds>
+                <successThreshold>0</successThreshold>
+              </livenessProbe>
+            </org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
+          </containers>
+          <envVars/>
+          <annotations/>
+          <imagePullSecrets/>
+        </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
+      </templates>
+      <serverUrl>https://172.30.0.1:443</serverUrl>
+      <serverCertificate>-----BEGIN CERTIFICATE-----
+MIIC6jCCAdKgAwIBAgIBATANBgkqhkiG9w0BAQsFADAmMSQwIgYDVQQDDBtvcGVu
+c2hpZnQtc2lnbmVyQDE1Mzg1MTI2ODAwHhcNMTgxMDAyMjAzNzU5WhcNMjMxMDAx
+MjAzODAwWjAmMSQwIgYDVQQDDBtvcGVuc2hpZnQtc2lnbmVyQDE1Mzg1MTI2ODAw
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDCWLpL0PPDQN5I4d9AOYgM
+yaew5K+ZViTM8mSHKLdB41s9L2MltEFgYLnnk9ftg1wGtd8qwk3daxR7a8V3+bUK
+fer+zWbOwU9GQkFvtrqvHFYWS6c3nd9hRVL6oamPZP+7gwy/xGzejV/+esYv/LLk
+Wp2LwDAQ4R71bHRWISauDONydCj4zWeD3GuFlRZoFpH9TE+9Nz17pZFVXFyX9Pmi
+D0eZdV56A/CFm/cxnZU3TMZEXwUgfgOZnveiRPu8osvL1D4+Xv7Z2ISP/cA8r5uj
+P7vPkUqbMvj46A3TM57uD52n/kfS9pgcvtcvF2GXEniBgOzrGQ39BHf9lsY2tKr9
+AgMBAAGjIzAhMA4GA1UdDwEB/wQEAwICpDAPBgNVHRMBAf8EBTADAQH/MA0GCSqG
+SIb3DQEBCwUAA4IBAQBMIfg3+lwjVVzAhj5E3v+UBnhVLLoy/OskFrMT6pDH1Ho8
+fvurgd5AcWDLZMOzn5OKxnb306NjVLDQ6s7lwmsXBdpxSE81/vsLjmMH/TF5Mu7W
+Xi9v6SDvdDWn1LkjFnma4eveQ+sYVcluNFh6ic7jIXsydNDSpo+AR8m/mkz+0sVU
+q/bCz++G2TIq+TGfPMZD2MHnYvleSQO7LD2Cn1ugvFFPR2zhY2ZLZ4SxuEmWRdg6
+JS19pHjmAIFKka2ap0eXoKDrivV5v3VrYUDazqsymIqMPGfBBIGoU/WLU9qUm7Ar
+tP21V/ooJbskPngxuVLtOAKeKjBZVJpD+zKNp6F7
+-----END CERTIFICATE-----</serverCertificate>
+      <skipTlsVerify>false</skipTlsVerify>
+      <addMasterProxyEnvVars>false</addMasterProxyEnvVars>
+      <capOnlyOnAlivePods>false</capOnlyOnAlivePods>
+      <namespace>jenkins</namespace>
+      <jenkinsUrl>http://172.30.242.142:80</jenkinsUrl>
+      <jenkinsTunnel>172.30.59.237:50000</jenkinsTunnel>
+      <credentialsId>1a12dfa4-7fc5-47a7-aa17-cc56572a41c7</credentialsId>
+      <containerCap>100</containerCap>
+      <retentionTimeout>5</retentionTimeout>
+      <connectTimeout>0</connectTimeout>
+      <readTimeout>0</readTimeout>
+      <labels class="com.google.common.collect.ImmutableMap">
+        <entry>
+          <string>jenkins</string>
+          <string>slave</string>
+        </entry>
+      </labels>
+      <usageRestricted>false</usageRestricted>
+      <maxRequestsPerHost>32</maxRequestsPerHost>
+      <podRetention class="org.csanchez.jenkins.plugins.kubernetes.pod.retention.Never"/>
+    </org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud>
+  </clouds>
+  <quietPeriod>1</quietPeriod>
+  <scmCheckoutRetryCount>0</scmCheckoutRetryCount>
+  <views>
+    <hudson.model.AllView>
+      <owner class="hudson" reference="../../.."/>
+      <name>all</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties/>
+    </hudson.model.AllView>
+  </views>
+  <primaryView>all</primaryView>
+  <slaveAgentPort>50000</slaveAgentPort>
+  <disabledAgentProtocols>
+    <string>JNLP-connect</string>
+    <string>JNLP2-connect</string>
+  </disabledAgentProtocols>
+  <label>master</label>
+  <nodeProperties/>
+  <globalNodeProperties/>
+  <noUsageStatistics>true</noUsageStatistics>
+</hudson>
