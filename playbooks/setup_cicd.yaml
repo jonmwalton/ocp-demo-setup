@@ -1,0 +1,137 @@
+---
+
+# Documentation:
+# This playbook is used to deploy 3Scale, and a restful service
+#
+# If you would like to test out Admin portal and/or developer portal SSO based access then you have to manually
+# change the SSO URL in the 3Scale Admin console - you will see that it has apps.demolab.local as the domain suffix,
+# changa this to wildcard domain of your Openshift Cluster - this is because there isn't a 3Scale API to automate this change.
+# Do this once the playbook has completed.
+#
+- name:               Create CICD demo
+  hosts:              localhost
+  connection:         local
+  gather_facts: no
+
+  vars_prompt:
+    - name:           ocp_username
+      prompt:         "Please provide Openshift Login username"
+      default:        developer
+      private:        no
+    - name:           ocp_password
+      prompt:         "Please provide your Openshift Login password"
+      default:        developer
+      private:        yes
+    - name:           ocp_url
+      prompt:         "Please provide your Openshift URL"
+      default:        https://192.168.99.100:8443
+      private:        no
+    - name:           domain_name_suffix
+      prompt:         "Please Enter the domain name wildcard suffix for all OCP routes"
+      default:        apps.clarksdale.demolab.local
+      private:        no
+    - name:           keystore_password
+      prompt:         "Please enter the default password for keystores"
+      default:        whatever
+    - name:           git_repo
+      prompt:         "Please Enter the Git repo to clone to get hold of artefacts"
+      default:        https://github.com/jonmwalton/ocp-demo-setup.git
+      private:        no
+    - name:           clone_destination
+      prompt:         "Please Enter the local destination to store the repo"
+      default:        /tmp/ocpdemotmp
+      private:        no
+
+#  vars:
+#    DOMAIN_NAME_SUFFIX: apps.demolab.local
+#    KEYSTORE_PASSWORD: test
+
+  tasks:
+
+    - name: Clone base git repo from "{{git_repo}}"
+      git:
+        repo: "{{git_repo}}"
+        dest: "{{clone_destination}}"
+        version: master
+        update: yes
+        clone: yes
+
+
+# Login to Openshift using oc client - I can't get the openshift_raw module to authenticate
+    - name:           login to Openshift at the specified URL
+      shell:          oc login {{ocp_url}} --username={{ocp_username}} --password={{ocp_password}}
+
+
+#####################################################
+# Create Nexus project
+#####################################################
+    - name:           Create nexus project
+      openshift_raw:
+        host:         "{{ocp_url}}"
+        username:     "{{ocp_username}}"
+        password:     "{{ocp_password}}"
+        api_version:  v1
+        verify_ssl:   no
+        kind:         Project
+        name:         nexus
+        description:  Shared Nexus
+        display_name: "Shared Nexus"
+        state:        present
+
+#####################################################
+# Create all Nexus artefacts
+#####################################################
+    
+    - name: Create persistent volume
+      openshift_raw:
+        host:           "{{ocp_url}}"
+        username:       "{{ocp_username}}"
+        password:       "{{ocp_password}}"
+        definition: "{{ lookup('file', '{{clone_destination}}/nexus/pvc.yml') | from_yaml }}"
+        verify_ssl:     no
+        state:          present
+
+    - name: Create services
+      openshift_raw:
+        host:           "{{ocp_url}}"
+        username:       "{{ocp_username}}"
+        password:       "{{ocp_password}}"
+        definition: "{{ lookup('file', '{{clone_destination}}/nexus/service.yml') | from_yaml }}"
+        verify_ssl:     no
+        state:          present
+
+    - name: Create deployment config
+      openshift_raw:
+        host:           "{{ocp_url}}"
+        username:       "{{ocp_username}}"
+        password:       "{{ocp_password}}"
+        definition: "{{ lookup('file', '{{clone_destination}}/nexus/dc.yml') | from_yaml }}"
+        verify_ssl:     no
+        state:          present    
+
+
+# Wait for Nexus to start before continuing
+    - name: Is Nexus started?
+      uri:
+        validate_certs: no
+        url: https://nexus3-nexus.{{domain_name_suffix}}/
+      register: test
+      until: test.status == 200
+      retries: 200
+      delay: 5
+
+
+# Run nexus setup script
+
+    - name: Run nexus setup script
+      shell: bash /nexus/setup_nexus3.sh
+
+
+# Logout of Openshift
+    - name:           logout of Openshift
+      shell:          oc logout
+
+    - name: Remove git folder (cleanup)
+      file:
+        path: "{{clone_destination}}"
+        state: absent
