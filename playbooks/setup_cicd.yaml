@@ -124,7 +124,7 @@
 # Run nexus setup script
 
     - name: Run nexus setup script
-      shell: bash /nexus/setup_nexus3.sh
+      shell: bash /nexus/setup_nexus3.sh  admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
 
 
 # Logout of Openshift
