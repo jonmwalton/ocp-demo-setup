@@ -30,9 +30,6 @@
       prompt:         "Please Enter the domain name wildcard suffix for all OCP routes"
       default:        apps.clarksdale.demolab.local
       private:        no
-    - name:           keystore_password
-      prompt:         "Please enter the default password for keystores"
-      default:        whatever
     - name:           git_repo
       prompt:         "Please Enter the Git repo to clone to get hold of artefacts"
       default:        https://github.com/jonmwalton/ocp-demo-setup.git
@@ -73,9 +70,8 @@
         api_version:  v1
         verify_ssl:   no
         kind:         Project
-        name:         nexus
-        description:  Shared Nexus
-        display_name: "Shared Nexus"
+        namespace:    nexus
+        name:         "Shared Nexus"
         state:        present
 
 #####################################################
