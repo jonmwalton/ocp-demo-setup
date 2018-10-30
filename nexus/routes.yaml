@@ -1,0 +1,35 @@
+kind: Route
+apiVersion: v1
+metadata:
+  annotations:
+  labels:
+    app: nexus3
+  name: nexus-registry
+  namespace: nexus
+spec:
+  port:
+    targetPort: 5000
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: nexus-registry
+    weight: 100
+  wildcardPolicy: None
+---  
+kind: Route
+apiVersion: v1
+metadata:
+  annotations:
+  labels:
+    app: nexus3
+  name: nexus3
+  namespace: nexus
+spec:
+  port:
+    targetPort: 8081-tcp
+  to:
+    kind: Service
+    name: nexus3
+    weight: 100
+  wildcardPolicy: None

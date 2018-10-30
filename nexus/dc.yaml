@@ -28,8 +28,6 @@ spec:
   template:
     metadata:
       annotations:
-        openshift.io/generated-by: OpenShiftNewApp
-      creationTimestamp: null
       labels:
         app: nexus3
         deploymentconfig: nexus3

@@ -87,7 +87,11 @@
     - name: Create deployment config
       k8s:
         src: '{{clone_destination}}/nexus/dc.yaml'
-        state:  present    
+        state:  present
+    - name: Create routes
+      k8s:
+        src: '{{clone_destination}}/nexus/routes.yaml'
+        state:  present        
 
 
 # Wait for Nexus to start before continuing
