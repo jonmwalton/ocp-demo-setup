@@ -1,16 +1,14 @@
+kind: PersistentVolumeClaim
 apiVersion: v1
-items:
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    annotations:
-    finalizers:
-    - kubernetes.io/pvc-protection
-    name: nexus-pvc
-    namespace: nexus
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 5Gi
+metadata:
+  annotations:
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: nexus-pvc
+  namespace: nexus
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
