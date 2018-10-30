@@ -14,7 +14,3 @@ items:
     resources:
       requests:
         storage: 5Gi
-kind: List
-metadata:
-  resourceVersion: ""
-  selfLink: ""

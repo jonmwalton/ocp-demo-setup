@@ -16,15 +16,15 @@
   vars_prompt:
     - name:           ocp_username
       prompt:         "Please provide Openshift Login username"
-      default:        developer
+      default:        jwalton
       private:        no
     - name:           ocp_password
       prompt:         "Please provide your Openshift Login password"
-      default:        developer
+      default:        Jmw11jmw!
       private:        yes
     - name:           ocp_url
       prompt:         "Please provide your Openshift URL"
-      default:        https://192.168.99.100:8443
+      default:        https://clarksdale.demolab.local:8443
       private:        no
     - name:           domain_name_suffix
       prompt:         "Please Enter the domain name wildcard suffix for all OCP routes"
@@ -55,23 +55,19 @@
 
 
 # Login to Openshift using oc client - I can't get the openshift_raw module to authenticate
-    - name:           login to Openshift at the specified URL
-      shell:          oc login {{ocp_url}} --username={{ocp_username}} --password={{ocp_password}}
+#    - name:           login to Openshift at the specified URL
+#      shell:          oc login {{ocp_url}} --username={{ocp_username}} --password={{ocp_password}}
 
 
 #####################################################
 # Create Nexus project
 #####################################################
     - name:           Create nexus project
-      openshift_raw:
-        host:         "{{ocp_url}}"
-        username:     "{{ocp_username}}"
-        password:     "{{ocp_password}}"
+      k8s:
         api_version:  v1
         verify_ssl:   no
         kind:         Project
-        namespace:    nexus
-        name:         "Shared Nexus"
+        name:         nexus
         state:        present
 
 #####################################################
@@ -79,31 +75,19 @@
 #####################################################
     
     - name: Create persistent volume
-      openshift_raw:
-        host:           "{{ocp_url}}"
-        username:       "{{ocp_username}}"
-        password:       "{{ocp_password}}"
-        definition: "{{ lookup('file', '{{clone_destination}}/nexus/pvc.yml') | from_yaml }}"
-        verify_ssl:     no
-        state:          present
+      k8s:
+        src: '{{clone_destination}}/nexus/pvc.yaml'
+        state:  present
 
     - name: Create services
-      openshift_raw:
-        host:           "{{ocp_url}}"
-        username:       "{{ocp_username}}"
-        password:       "{{ocp_password}}"
-        definition: "{{ lookup('file', '{{clone_destination}}/nexus/service.yml') | from_yaml }}"
-        verify_ssl:     no
-        state:          present
+      k8s:
+        src: '{{clone_destination}}/nexus/service.yaml'
+        state:  present
 
     - name: Create deployment config
-      openshift_raw:
-        host:           "{{ocp_url}}"
-        username:       "{{ocp_username}}"
-        password:       "{{ocp_password}}"
-        definition: "{{ lookup('file', '{{clone_destination}}/nexus/dc.yml') | from_yaml }}"
-        verify_ssl:     no
-        state:          present    
+      k8s:
+        src: '{{clone_destination}}/nexus/dc.yaml'
+        state:  present    
 
 
 # Wait for Nexus to start before continuing
