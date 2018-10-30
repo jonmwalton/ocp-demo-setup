@@ -1,43 +1,41 @@
-kind: ServiceList
+kind: Service
 apiVersion: v1
-items:
-- kind: Service
-  apiVersion: v1
-  metadata:
-    labels:
-      app: nexus3
-    name: nexus-registry
-    namespace: nexus
-  spec:
-    ports:
-    - port: 5000
-      protocol: TCP
-      targetPort: 5000
-    selector:
-      app: nexus3
-      deploymentconfig: nexus3
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- kind: Service
-  apiVersion: v1
-  metadata:
-    annotations:
-    labels:
-      app: nexus3
-    name: nexus3
-    namespace: nexus
-  spec:
-    ports:
-    - name: 8081-tcp
-      port: 8081
-      protocol: TCP
-      targetPort: 8081
-    selector:
-      app: nexus3
-      deploymentconfig: nexus3
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
+metadata:
+  labels:
+    app: nexus3
+  name: nexus-registry
+  namespace: nexus
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: nexus3
+    deploymentconfig: nexus3
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+--- 
+kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+  labels:
+    app: nexus3
+  name: nexus3
+  namespace: nexus
+spec:
+  ports:
+  - name: 8081-tcp
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: nexus3
+    deploymentconfig: nexus3
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
