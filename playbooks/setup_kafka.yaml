@@ -8,20 +8,12 @@
 # changa this to wildcard domain of your Openshift Cluster - this is because there isn't a 3Scale API to automate this change.
 # Do this once the playbook has completed.
 #
-- name:               Create CICD demo
+- name:               Create kafka demo
   hosts:              localhost
   connection:         local
   gather_facts: no
 
   vars_prompt:
-    - name:           ocp_username
-      prompt:         "Please provide Openshift Login username"
-      default:        jwalton
-      private:        no
-    - name:           ocp_password
-      prompt:         "Please provide your Openshift Login password"
-      default:        Jmw11jmw!
-      private:        yes
     - name:           ocp_url
       prompt:         "Please provide your Openshift URL"
       default:        https://clarksdale.demolab.local:8443
@@ -59,57 +51,51 @@
 #      shell:          oc login {{ocp_url}} --username={{ocp_username}} --password={{ocp_password}}
 
 
+    - name: Download and unzip the install files
+      unarchive:
+        src:  https://access.redhat.com/node/3596931/423/1
+        dest: '{{clone_destination}}/amq-streams'
+
 #####################################################
-# Create Nexus project
+# Create AMQ Streams Cluster project
 #####################################################
-    - name:           Create nexus project
+    - name:           Create AMQ Streams Cluster project
       k8s:
         api_version:  v1
         verify_ssl:   no
         kind:         Project
-        name:         nexus
+        name:         amq-streams-cluster-auto
         state:        present
 
 #####################################################
-# Create all Nexus artefacts
+# Create all kafka cluster artefacts
 #####################################################
-    
-    - name: Create persistent volume
+    - name: Modify install files
+      shell: "sed -i 's/namespace: .*/namespace: amq-streams-cluster-auto/' '{{clone_destination}}/amq-streams/install/cluster-operator/*RoleBinding*.yaml'"
+
+    - name: Install cluster operator
       k8s:
-        src: '{{clone_destination}}/nexus/pvc.yaml'
+        src: '{{clone_destination}}/amq-streams/install/cluster-operator'
         state:  present
+        namespace:  amq-streams-cluster-auto
 
-    - name: Create services
+    - name: Install templates
       k8s:
-        src: '{{clone_destination}}/nexus/service.yaml'
+        src: '{{clone_destination}}/amq-streams/examples/templates/cluster-operator'
         state:  present
+        namespace:  amq-streams-cluster-auto
 
-    - name: Create deployment config
+    - name: Create kafka ephemeral
       k8s:
-        src: '{{clone_destination}}/nexus/dc.yaml'
+        src: '{{clone_destination}}/amq-streams/examples/kafka/kafka-ephemeral.yaml'
         state:  present
+        namespace:  amq-streams-cluster-auto
 
-    - name: Create routes
+    - name: Create kafka connect
       k8s:
-        src: '{{clone_destination}}/nexus/routes.yaml'
-        state:  present        
-
-
-# Wait for Nexus to start before continuing
-    - name: Is Nexus started?
-      uri:
-        validate_certs: no
-        url: http://nexus3-nexus.{{domain_name_suffix}}/
-      register: test
-      until: test.status == 200
-      retries: 200
-      delay: 5
-
-
-# Run nexus setup script
-
-    - name: Run nexus setup script
-      shell: bash /nexus/setup_nexus3.sh  admin admin123 http://$(oc get route nexus3 --template='{{ .spec.host }}')
+        src: '{{clone_destination}}/amq-streams/examples/kafka-connect/kafka-connect.yaml'
+        state:  present
+        namespace:  amq-streams-cluster-auto        
 
 
 # Logout of Openshift
