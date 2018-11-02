@@ -44,6 +44,7 @@
         version: master
         update: yes
         clone: yes
+        force: yes
 
 
 # Login to Openshift using oc client - I can't get the openshift_raw module to authenticate
@@ -51,10 +52,20 @@
 #      shell:          oc login {{ocp_url}} --username={{ocp_username}} --password={{ocp_password}}
 
 
-    - name: Download and unzip the install files
-      unarchive:
-        src:  https://access.redhat.com/node/3596931/423/1
-        dest: '{{clone_destination}}/amq-streams'
+#    - name: Download and unzip the install files
+#      unarchive:
+#        src:  https://access.redhat.com/node/3596931/423/1
+#        dest: '{{clone_destination}}/amq-streams'
+
+    - name: Clone kafka operator repo
+        git:
+          repo: https://github.com/strimzi/strimzi-kafka-operator.git
+          dest: "{{clone_destination}}"
+          version: master
+          update: yes
+          clone: yes
+          force: yes
+
 
 #####################################################
 # Create AMQ Streams Cluster project
@@ -71,19 +82,16 @@
 # Create all kafka cluster artefacts
 #####################################################
     - name: Modify install files
-      shell: "sed -i 's/namespace: .*/namespace: amq-streams-cluster-auto/' '{{clone_destination}}/amq-streams/install/cluster-operator/*RoleBinding*.yaml'"
+      shell: oc get project amq-streams-cluster-auto
+
+    - name: Modify install files
+      shell: "sed -i 's/namespace: .*/namespace: amq-streams-cluster-auto/' {{clone_destination}}/amq-streams/install/cluster-operator/*RoleBinding*.yaml"
 
     - name: Install cluster operator
-      k8s:
-        src: '{{clone_destination}}/amq-streams/install/cluster-operator'
-        state:  present
-        namespace:  amq-streams-cluster-auto
+      shell: oc apply -f {{clone_destination}}/amq-streams/install/cluster-operator -n amq-streams-cluster-auto
 
     - name: Install templates
-      k8s:
-        src: '{{clone_destination}}/amq-streams/examples/templates/cluster-operator'
-        state:  present
-        namespace:  amq-streams-cluster-auto
+      shell: oc apply -f {{clone_destination}}/amq-streams/examples/templates/cluster-operator -n amq-streams-cluster-auto
 
     - name: Create kafka ephemeral
       k8s:
@@ -97,10 +105,6 @@
         state:  present
         namespace:  amq-streams-cluster-auto        
 
-
-# Logout of Openshift
-    - name:           logout of Openshift
-      shell:          oc logout
 
     - name: Remove git folder (cleanup)
       file:
