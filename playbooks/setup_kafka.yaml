@@ -1,12 +1,8 @@
 ---
 
 # Documentation:
-# This playbook is used to deploy 3Scale, and a restful service
+# This playbook is used to deploy an AMQ Streams cluster plus an IoT demo
 #
-# If you would like to test out Admin portal and/or developer portal SSO based access then you have to manually
-# change the SSO URL in the 3Scale Admin console - you will see that it has apps.demolab.local as the domain suffix,
-# changa this to wildcard domain of your Openshift Cluster - this is because there isn't a 3Scale API to automate this change.
-# Do this once the playbook has completed.
 #
 - name:               Create kafka demo
   hosts:              localhost
@@ -14,32 +10,17 @@
   gather_facts: no
 
   vars_prompt:
-    - name:           ocp_url
-      prompt:         "Please provide your Openshift URL"
-      default:        https://clarksdale.demolab.local:8443
-      private:        no
-    - name:           domain_name_suffix
-      prompt:         "Please Enter the domain name wildcard suffix for all OCP routes"
-      default:        apps.clarksdale.demolab.local
-      private:        no
-    - name:           git_repo
-      prompt:         "Please Enter the Git repo to clone to get hold of artefacts"
-      default:        https://github.com/jonmwalton/ocp-demo-setup.git
-      private:        no
     - name:           clone_destination
-      prompt:         "Please Enter the local destination to store the repo"
+      prompt:         "Please Enter the local destination to store the required files"
       default:        /tmp/ocpdemotmp
       private:        no
 
-#  vars:
-#    DOMAIN_NAME_SUFFIX: apps.demolab.local
-#    KEYSTORE_PASSWORD: test
 
   tasks:
 
-    - name: Clone base git repo from "{{git_repo}}"
+    - name: Clone base git repo from https://github.com/jonmwalton/ocp-demo-setup.git
       git:
-        repo: "{{git_repo}}"
+        repo: https://github.com/jonmwalton/ocp-demo-setup.git
         dest: "{{clone_destination}}"
         version: master
         update: yes
@@ -47,24 +28,14 @@
         force: yes
 
 
-# Login to Openshift using oc client - I can't get the openshift_raw module to authenticate
-#    - name:           login to Openshift at the specified URL
-#      shell:          oc login {{ocp_url}} --username={{ocp_username}} --password={{ocp_password}}
-
-
-#    - name: Download and unzip the install files
-#      unarchive:
-#        src:  https://access.redhat.com/node/3596931/423/1
-#        dest: '{{clone_destination}}/amq-streams'
-
     - name: Clone kafka operator repo
-        git:
-          repo: https://github.com/strimzi/strimzi-kafka-operator.git
-          dest: "{{clone_destination}}"
-          version: master
-          update: yes
-          clone: yes
-          force: yes
+      git:
+        repo: https://github.com/strimzi/strimzi-kafka-operator.git
+        dest: "{{clone_destination}}/amq-streams"
+        version: master
+        update: yes
+        clone: yes
+        force: yes
 
 
 #####################################################
@@ -75,36 +46,98 @@
         api_version:  v1
         verify_ssl:   no
         kind:         Project
-        name:         amq-streams-cluster-auto
+        name:         amq-streams-cluster
         state:        present
 
 #####################################################
 # Create all kafka cluster artefacts
 #####################################################
     - name: Modify install files
-      shell: oc get project amq-streams-cluster-auto
+      shell: oc get project amq-streams-cluster
 
     - name: Modify install files
-      shell: "sed -i 's/namespace: .*/namespace: amq-streams-cluster-auto/' {{clone_destination}}/amq-streams/install/cluster-operator/*RoleBinding*.yaml"
+      shell: "sed -i 's/namespace: .*/namespace: amq-streams-cluster/' {{clone_destination}}/amq-streams/install/cluster-operator/*RoleBinding*.yaml"
 
     - name: Install cluster operator
-      shell: oc apply -f {{clone_destination}}/amq-streams/install/cluster-operator -n amq-streams-cluster-auto
+      shell: oc apply -f {{clone_destination}}/amq-streams/install/cluster-operator -n amq-streams-cluster
 
     - name: Install templates
-      shell: oc apply -f {{clone_destination}}/amq-streams/examples/templates/cluster-operator -n amq-streams-cluster-auto
+      shell: oc apply -f {{clone_destination}}/amq-streams/examples/templates/cluster-operator -n amq-streams-cluster
 
     - name: Create kafka ephemeral
       k8s:
         src: '{{clone_destination}}/amq-streams/examples/kafka/kafka-ephemeral.yaml'
         state:  present
-        namespace:  amq-streams-cluster-auto
+        namespace:  amq-streams-cluster
 
     - name: Create kafka connect
       k8s:
         src: '{{clone_destination}}/amq-streams/examples/kafka-connect/kafka-connect.yaml'
         state:  present
-        namespace:  amq-streams-cluster-auto        
+        namespace:  amq-streams-cluster        
 
+
+    - name: Clone IoT kafka demo repo
+      git:
+        repo: https://github.com/strimzi/strimzi-lab.git
+        dest: "{{clone_destination}}/amq-streams"
+        version: master
+        update: yes
+        clone: yes
+        force: yes
+
+    - name: Modify kafka bootstrap URL
+      shell: "sed -i 's/my-cluster-kafka:9092/my-cluster-kafka-bootstrap.amq-streams-cluster:9092/' {{clone_destination}}/amq-streams/iot-demo/consumer-app/resources/consumer-app.yml"
+    
+    - name: Modify kafka bootstrap URL
+      shell: "sed -i 's/my-cluster-kafka:9092/my-cluster-kafka-bootstrap.amq-streams-cluster:9092/' {{clone_destination}}/amq-streams/iot-demo/device-app/resources/device-app.yml"
+
+    - name: Modify kafka bootstrap URL
+      shell: "sed -i 's/my-cluster-kafka:9092/my-cluster-kafka-bootstrap.amq-streams-cluster:9092/' {{clone_destination}}/amq-streams/iot-demo/stream-app/resources/stream-app.yml"
+
+    - name: Modify kafka bootstrap URL
+      shell: "sed -i 's/ConfigMap/KafkaTopic/' {{clone_destination}}/amq-streams/iot-demo/stream-app/resources/topics.yml"
+
+    - name: Modify kafka bootstrap URL
+      shell: "sed -i 's/v1/v1alpha1/' {{clone_destination}}/amq-streams/iot-demo/stream-app/resources/topics.yml"      
+
+    - name: Create Topics
+      k8s:
+        src: '{{clone_destination}}/amq-streams/iot-demo/stream-app/resources/topics.yml'
+        state:  present
+        namespace:  amq-streams-cluster
+
+#####################################################
+# Create IoT demo project
+#####################################################
+    - name:           Create IoT Demo project
+      k8s:
+        api_version:  v1
+        verify_ssl:   no
+        kind:         Project
+        name:         iot-kafka-demo
+        state:        present
+
+    - name: Join the IoT demo project to the Kafka Cluster project
+      shell: oc adm pod-network join-projects --to=iot-kafka-demo amq-streams-cluster
+
+    - name: Create stream app
+      k8s:
+        src: '{{clone_destination}}/amq-streams/iot-demo/stream-app/resources/stream-app.yml'
+        state:  present
+        namespace:  iot-kafka-demo
+
+    - name: Create device app
+      k8s:
+        src: '{{clone_destination}}/amq-streams/iot-demo/device-app/resources/device-app.yml'
+        state:  present
+        namespace:  iot-kafka-demo
+
+    - name: Create consumer app
+      k8s:
+        src: '{{clone_destination}}/amq-streams/iot-demo/consumer-app/resources/consumer-app.yml'
+        state:  present
+        namespace:  iot-kafka-demo
 
     - name: Remove git folder (cleanup)
       file:
